@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "567973671446",
+    "firebase_url": "https://navigaze-29230-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "navigaze-29230",
+    "storage_bucket": "navigaze-29230.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567973671446:android:87b0ac1f45bb9897edbb37",
+        "android_client_info": {
+          "package_name": "com.csgamestudio.navigaze"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyrlLbJTPyZtdDW02QOjmoPfwtS6McWrc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
