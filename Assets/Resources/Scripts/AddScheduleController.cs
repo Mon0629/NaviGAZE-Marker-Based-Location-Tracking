@@ -5,9 +5,12 @@ using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+
 
 public class AddScheduleController : MonoBehaviour
 {
+    public SceneManagerScript sceneManager;
     private DatabaseReference dbReference;
 
     public InputField subjectCode;    
@@ -17,7 +20,9 @@ public class AddScheduleController : MonoBehaviour
     public Dropdown campus;       
 
     public GameObject rowTemplate;     
-    public Transform tableContainer; 
+    public Transform tableContainer;
+
+    private bool switchScene = false;
 
     private List<ScheduleData> scheduleList = new List<ScheduleData>();
     string userId = UserSession.UserId;
@@ -41,7 +46,16 @@ public class AddScheduleController : MonoBehaviour
         });
     }
 
- 
+    void Update()
+    {
+        if (switchScene)
+        {
+            switchScene = false;
+            SceneManager.LoadScene("DashboardPage");
+        }
+    }
+
+
     public void OnAddScheduleButtonClicked()
     {
     
@@ -129,7 +143,9 @@ private void SaveToDatabase(ScheduleData schedule)
         if (task.IsCompleted)
      {
          Debug.Log("Schedule data saved to Firebase under user: " + userId);
-     }
+         switchScene = true;
+
+        }
         else
         {
         Debug.LogError("Failed to save schedule data: " + task.Exception);
