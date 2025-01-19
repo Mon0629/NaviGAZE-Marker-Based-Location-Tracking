@@ -20,6 +20,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AddSchedulePage.unity
     guid: 0083606a9a911b545835d608cb631be6
+  - enabled: 1
+    path: Assets/Scenes/DashboardPage.unity
+    guid: 5922610d4ae3c494e981e888a29aa838
+  - enabled: 1
+    path: Assets/Scenes/HistoryPage.unity
+    guid: 6a69b116e09f7b043a99e4aac6496187
+  - enabled: 1
+    path: Assets/Scenes/CollectionPage.unity
+    guid: 529a1246948c3de46a6beffa1989bc8c
+  - enabled: 1
+    path: Assets/Scenes/StorePage.unity
+    guid: 974573cef8884e848b4b807d2f7a1d8f
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 6ee72d15cf39dd748a13eac57397b9af,
       type: 2}
