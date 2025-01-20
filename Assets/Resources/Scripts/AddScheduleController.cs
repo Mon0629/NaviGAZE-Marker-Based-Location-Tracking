@@ -162,6 +162,11 @@ private void SaveToDatabase(ScheduleData schedule)
         campus.value = 0;
     }
 
+    public void SkipButtonClicked()
+    {
+        SceneManager.LoadScene("DashboardPage");
+    }
+
     private void ClearTable()
     {
         foreach (Transform child in tableContainer)

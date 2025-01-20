@@ -308,6 +308,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneManager: {fileID: 190293414}
+  usernameInputField: {fileID: 2004232159}
+  passwordInputField: {fileID: 828099753}
+  userData:
+    firstName: 
+    lastName: 
+    email: 
+    password: 
+    department: 
+    program: 
+    yearSection: 
 --- !u!114 &190293414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -600,13 +610,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 190293412}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 190293413}
+        m_TargetAssemblyTypeName: StudentLoginController, Assembly-CSharp
+        m_MethodName: OnLoginButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
