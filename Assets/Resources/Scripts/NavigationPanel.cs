@@ -38,4 +38,9 @@ public class NavigationPanel : MonoBehaviour
     {
         SceneManager.LoadScene("StorePage");
     }
+
+    public void LoadLocationScene()
+    {
+        SceneManager.LoadScene("LocationPage");
+    }
 }
