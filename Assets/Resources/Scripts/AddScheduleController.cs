@@ -17,7 +17,8 @@ public class AddScheduleController : MonoBehaviour
     public InputField subjectName;    
     public InputField room;          
     public Dropdown dayOfTheWeek; 
-    public Dropdown campus;       
+    public Dropdown startTime;
+    public Dropdown endTime;
 
     public GameObject rowTemplate;     
     public Transform tableContainer;
@@ -73,13 +74,14 @@ public class AddScheduleController : MonoBehaviour
       
         TextMeshProUGUI[] rowColumns = newRow.GetComponentsInChildren<TextMeshProUGUI>();
 
-        if (rowColumns.Length >= 5)
+        if (rowColumns.Length >= 6)
         {
             rowColumns[0].text = subjectCode.text;                                 // Subject Code
             rowColumns[1].text = subjectName.text;                                // Subject Name
             rowColumns[2].text = room.text;                                       // Room
             rowColumns[3].text = dayOfTheWeek.options[dayOfTheWeek.value].text;   // Day of the Week
-            rowColumns[4].text = campus.options[campus.value].text;               // Campus
+            rowColumns[4].text = startTime.options[startTime.value].text;         // Start Time
+            rowColumns[5].text = endTime.options[endTime.value].text;             // End Time
         }
         else
         {
@@ -91,7 +93,8 @@ public class AddScheduleController : MonoBehaviour
             subjectName.text,
             room.text,
             dayOfTheWeek.options[dayOfTheWeek.value].text,
-            campus.options[campus.value].text
+            startTime.options[startTime.value].text,
+            endTime.options[endTime.value].text
         );
 
         scheduleList.Add(schedule); 
@@ -134,7 +137,8 @@ private void SaveToDatabase(ScheduleData schedule)
         { "subjectName", schedule.subjectName },
         { "room", schedule.room },
         { "dayOfTheWeek", schedule.dayOfTheWeek },
-        { "campus", schedule.campus }
+        { "startTime", schedule.startTime },
+        { "endTime", schedule.endTime}
     };
 
     // Save the schedule under the user's ID
@@ -159,7 +163,8 @@ private void SaveToDatabase(ScheduleData schedule)
         subjectName.text = "";
         room.text = "";
         dayOfTheWeek.value = 0;
-        campus.value = 0;
+        startTime.value = 0;
+        endTime.value = 0;
     }
 
     public void SkipButtonClicked()
@@ -184,14 +189,16 @@ public class ScheduleData
     public string subjectName;
     public string room;
     public string dayOfTheWeek;
-    public string campus;
+    public string startTime;
+    public string endTime;
 
-    public ScheduleData(string subjectCode, string subjectName, string room, string dayOfTheWeek, string campus)
+    public ScheduleData(string subjectCode, string subjectName, string room, string dayOfTheWeek, string startTime, string endTime)
     {
         this.subjectCode = subjectCode;
         this.subjectName = subjectName;
         this.room = room;
         this.dayOfTheWeek = dayOfTheWeek;
-        this.campus = campus;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 }
