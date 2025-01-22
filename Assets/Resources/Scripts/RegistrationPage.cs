@@ -21,6 +21,7 @@ public class RegistrationPage : MonoBehaviour
     public InputField passwordInput;
     public InputField confirmPasswordInput;
     public DropdownController dropdownController;
+    public Image displayImage;
     public UserData userData;
 
     private bool switchScene = false;
@@ -98,9 +99,16 @@ public class RegistrationPage : MonoBehaviour
             return;
         }
 
+        string profileImage = ConvertImageToBase64(displayImage);
+         if (string.IsNullOrEmpty(profileImage))
+         {
+              Debug.LogError("No image selected.");
+             return;
+        }
+
         string hashedPassword = HashPassword(password);
 
-        userData = new UserData(firstName, lastName, email, hashedPassword, department, program, yearSection);
+        userData = new UserData(firstName, lastName, email, hashedPassword, department, program, yearSection, profileImage);
 
         string json = JsonUtility.ToJson(userData);
 
@@ -145,4 +153,16 @@ public class RegistrationPage : MonoBehaviour
             return builder.ToString();
         }
     }
+    private string ConvertImageToBase64(Image image)
+{
+    if (image.sprite == null)
+    {
+        Debug.LogError("No image selected.");
+        return null;
+    }
+    Texture2D texture = image.sprite.texture;
+    byte[] imageBytes = texture.EncodeToPNG();
+    return System.Convert.ToBase64String(imageBytes);
+}
+
 }

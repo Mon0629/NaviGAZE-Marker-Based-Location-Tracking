@@ -3,79 +3,77 @@ using System.Collections;
 using UnityEngine.UI;
 using Google;
 using System.Threading.Tasks;
-using UnityEngine.Networking;
-using System.Collections.Generic;
+using Firebase.Extensions;
 using System;
 
 public class GoogleAuth : MonoBehaviour
 {
     public Text emailauth, nameauth;
     private GoogleSignInConfiguration configuration;
-    public string webClientId ="Y754613247534-6fs4ueotgooi3u21nlp19frdqv2t3hmh.apps.googleusercontent.com";
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    Firebase.Auth.FirebaseAuth auth;
+    Firebase.Auth.FirebaseUser user;
+    public string webClientId = "754613247534-gcommev8bu0htsj1r8pafnsj2ud56pu5.apps.googleusercontent.com";
 
     void Awake()
     {
-        configuration = new GoogleSignInConfiguration {
-             WebClientId = webClientId, 
-             RequestIdToken = true,
-             UseGameSignIn = false,
-             RequestEmail = true 
-             };
+        // Configure Google Sign-In
+        configuration = new GoogleSignInConfiguration
+        {
+            WebClientId = webClientId,
+            RequestIdToken = true
+        };
+
+        // Initialize Firebase
+        FirebaseInit();
     }
 
+    private void FirebaseInit()
+    {
+        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+    }
+
+    // Method to be called when the button is clicked
     public void SignInWithGoogle()
     {
         GoogleSignIn.Configuration = configuration;
-       GoogleSignIn.DefaultInstance.SignIn().ContinueWith(OnAuthenticationFinished, TaskScheduler.Default);  
+        GoogleSignIn.Configuration.UseGameSignIn = false;
+        GoogleSignIn.Configuration.RequestIdToken = true;
+        GoogleSignIn.Configuration.RequestEmail = true;
+
+        GoogleSignIn.DefaultInstance.SignIn().ContinueWith(OnAuthenticationFinished);
     }
-    internal void OnAuthenticationFinished(Task<GoogleSignInUser> task)
+
+    private void OnAuthenticationFinished(Task<GoogleSignInUser> task)
     {
         if (task.IsFaulted)
         {
-            using (IEnumerator<Exception> enumerator = task.Exception.InnerExceptions.GetEnumerator())
-            {
-                if (enumerator.MoveNext())
-                {
-                    GoogleSignIn.SignInException error = (GoogleSignIn.SignInException)enumerator.Current;
-                    Debug.Log("Got Error: " + error.Status + " " + error.Message);
-                }
-                else
-                {
-                    Debug.Log("Got Unexpected Exception: " + task.Exception);
-                }
-            }
+            Debug.LogError("Google Sign-In Failed");
         }
         else if (task.IsCanceled)
         {
-            Debug.Log("Canceled");
+            Debug.LogWarning("Google Sign-In Canceled");
         }
         else
         {
-            StartCoroutine(UpdateUI(task.Result));
+            Firebase.Auth.Credential credential = Firebase.Auth.GoogleAuthProvider.GetCredential(task.Result.IdToken, null);
+            auth.SignInWithCredentialAsync(credential).ContinueWithOnMainThread(authTask =>
+            {
+                if (authTask.IsCanceled)
+                {
+                    Debug.LogWarning("Firebase Sign-In Canceled");
+                }
+                else if (authTask.IsFaulted)
+                {
+                    Debug.LogError("Firebase Sign-In Error: " + authTask.Exception);
+                }
+                else
+                {
+                    user = auth.CurrentUser;
+                    emailauth.text = user.Email;
+                    nameauth.text = user.DisplayName;
+                    Debug.Log($"Firebase Sign-In Success: {user.DisplayName} ({user.Email})");
+                }
+            });
         }
-
     }
-
-
-    IEnumerator UpdateUI(GoogleSignInUser user)
-    {
-        Debug.Log("Welcome" + user.DisplayName);
-        nameauth.text = user.DisplayName;
-        emailauth.text = user.Email;
-        yield return null;
-    }
-
-
 }
