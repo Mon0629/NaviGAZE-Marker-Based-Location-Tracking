@@ -33,7 +33,7 @@ public class AddScheduleController : MonoBehaviour
             if (task.Result == DependencyStatus.Available)
             {
                 FirebaseApp app = FirebaseApp.DefaultInstance;
-                string databaseUrl = "https://navigaze-29230-default-rtdb.asia-southeast1.firebasedatabase.app/"; 
+                string databaseUrl = "https://navigaze-448413-default-rtdb.asia-southeast1.firebasedatabase.app/"; 
                 dbReference = FirebaseDatabase.GetInstance(app, databaseUrl).RootReference;
                 Debug.Log("Firebase Initialized Successfully");
                 
