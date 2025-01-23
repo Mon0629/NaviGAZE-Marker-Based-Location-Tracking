@@ -21,7 +21,6 @@ public class RegistrationPage : MonoBehaviour
     public InputField passwordInput;
     public InputField confirmPasswordInput;
     public DropdownController dropdownController;
-    public Image displayImage;
     public UserData userData;
 
     private bool switchScene = false;
@@ -99,16 +98,16 @@ public class RegistrationPage : MonoBehaviour
             return;
         }
 
-        string profileImage = ConvertImageToBase64(displayImage);
-         if (string.IsNullOrEmpty(profileImage))
-         {
-              Debug.LogError("No image selected.");
-             return;
-        }
+        //string profileImage = ConvertImageToBase64(displayImage);
+        // if (string.IsNullOrEmpty(profileImage))
+        // {
+        //      Debug.LogError("No image selected.");
+        //     return;
+        //}
 
         string hashedPassword = HashPassword(password);
 
-        userData = new UserData(firstName, lastName, email, hashedPassword, department, program, yearSection, profileImage);
+        userData = new UserData(firstName, lastName, email, hashedPassword, department, program, yearSection);
 
         string json = JsonUtility.ToJson(userData);
 
