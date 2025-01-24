@@ -10,9 +10,8 @@ namespace userDataModel.Models
         public string department;
         public string program;
         public string yearSection;
-        public string profileImage;
 
-        public UserData(string firstName, string lastName, string email, string password, string department, string program, string yearSection, string profileImage)
+        public UserData(string firstName, string lastName, string email, string password, string department, string program, string yearSection)
         {
             this.firstName = firstName;
             this.lastName = lastName;
@@ -21,7 +20,6 @@ namespace userDataModel.Models
             this.department = department;
             this.program = program;
             this.yearSection = yearSection;
-            this.profileImage = profileImage;
         }
     }
 }
