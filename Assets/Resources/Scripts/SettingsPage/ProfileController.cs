@@ -16,6 +16,8 @@ public class ProfileController : MonoBehaviour
     public InputField programInputField;
     public InputField emailInputField;
     public InputField yearAndSectionInputField;
+    public Dropdown collegeDepartmentDropdown;
+    public Dropdown programDropdown;
     public Button saveButton;
     public Button editButton;
 
@@ -77,6 +79,12 @@ public class ProfileController : MonoBehaviour
 
         fullNameInputField.gameObject.SetActive(!enable);
 
+        collegeDepartmentDropdown.gameObject.SetActive(enable);
+        programDropdown.gameObject.SetActive(enable);
+
+        collegeDepartmentInputField.gameObject.SetActive(!enable);
+        programInputField.gameObject.SetActive(!enable);
+
         firstNameInputField.interactable = enable;
         lastNameInputField.interactable = enable;
         emailInputField.interactable = enable;
@@ -88,14 +96,17 @@ public class ProfileController : MonoBehaviour
 
     public void OnSaveButtonClicked()
     {
+        string selectedDepartment = collegeDepartmentDropdown.options[collegeDepartmentDropdown.value].text;
+        string selectedProgram = programDropdown.options[programDropdown.value].text;
+
         // Update Firebase with new data
         dbReference.Child("users").Child(userId).UpdateChildrenAsync(new System.Collections.Generic.Dictionary<string, object>
         {
             { "firstName", firstNameInputField.text },
             { "lastName", lastNameInputField.text },
             { "email", emailInputField.text },
-            { "department", collegeDepartmentInputField.text },
-            { "program", programInputField.text},
+            { "department", selectedDepartment},
+            { "program", selectedProgram},
             { "yearSection", yearAndSectionInputField.text}
         }).ContinueWithOnMainThread(task =>
         {
@@ -103,6 +114,8 @@ public class ProfileController : MonoBehaviour
             {
                 Debug.Log("Profile updated successfully!");
                 ToggleEditing(false); // Disable editing after saving
+                collegeDepartmentInputField.text = selectedDepartment;
+                programInputField.text = selectedProgram;
                 editButton.GetComponentInChildren<Text>().text = "Edit Profile"; // Reset button label
             }
             else
