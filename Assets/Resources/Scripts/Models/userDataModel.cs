@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace userDataModel.Models
 {
     [System.Serializable]
@@ -10,6 +12,8 @@ namespace userDataModel.Models
         public string department;
         public string program;
         public string yearSection;
+        public int userCoins;
+        public int exp;
 
         public UserData(string firstName, string lastName, string email, string password, string department, string program, string yearSection)
         {
@@ -20,6 +24,9 @@ namespace userDataModel.Models
             this.department = department;
             this.program = program;
             this.yearSection = yearSection;
+
+            this.userCoins = 50;
+            this.exp = 0;
         }
     }
 }

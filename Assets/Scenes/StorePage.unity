@@ -422,6 +422,7 @@ GameObject:
   - component: {fileID: 344598326}
   - component: {fileID: 344598325}
   - component: {fileID: 344598329}
+  - component: {fileID: 344598330}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -492,10 +493,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 344598324}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d781c230444320347b436d616343c957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  accessoriesUI: {fileID: 2013041277}
+  openAccessoriesButton: {fileID: 124282576}
+--- !u!114 &344598330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344598324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed84da0efb1d9af4daf08bbcac9aae04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPrefab: {fileID: 804164191}
+  itemPrefab: {fileID: 9040719283908942251, guid: 81143be78097ac544b3ec78cfe70f981,
+    type: 3}
   contentParent: {fileID: 1721137795}
 --- !u!1 &526789249
 GameObject:
@@ -890,12 +906,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &804164191 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9040719283908942251, guid: 81143be78097ac544b3ec78cfe70f981,
-    type: 3}
-  m_PrefabInstance: {fileID: 6219306816404986785}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &804164192 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6511147868378175364, guid: 81143be78097ac544b3ec78cfe70f981,
@@ -1978,7 +1988,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 1
   m_Spacing: 500
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
@@ -2463,20 +2473,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8501204428774200625, guid: 81143be78097ac544b3ec78cfe70f981,
+    - target: {fileID: 8373371803579496863, guid: 81143be78097ac544b3ec78cfe70f981,
         type: 3}
-      propertyPath: m_Text
-      value: Preview
-      objectReference: {fileID: 0}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 344598330}
     - target: {fileID: 9040719283908942251, guid: 81143be78097ac544b3ec78cfe70f981,
         type: 3}
       propertyPath: m_Name
       value: ItemPanel
-      objectReference: {fileID: 0}
-    - target: {fileID: 9040719283908942251, guid: 81143be78097ac544b3ec78cfe70f981,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

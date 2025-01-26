@@ -75,7 +75,7 @@ public class StudentLoginController : MonoBehaviour
             {
                 DataSnapshot snapshot = task.Result;
                 bool loginSuccess = false;
-                string loggedInUserId = null; // Variable to store the UserID
+                string userId = null; // Variable to store the UserID
 
                 foreach (DataSnapshot userSnapshot in snapshot.Children)
                 {
@@ -85,12 +85,13 @@ public class StudentLoginController : MonoBehaviour
                     if (user.email == email && user.password == hashedPassword)
                     {
                         loginSuccess = true;
-                        loggedInUserId = userSnapshot.Key; // Fetch the UserID (key)
-                        Debug.Log($"Login Success! UserID: {loggedInUserId}");
+                        userId = userSnapshot.Key; // Fetch the UserID (key)
+                        Debug.Log($"Login Success! UserID: {userId}");
 
                         // Store the UserID for later use (e.g., using PlayerPrefs or a session manager)
-                        PlayerPrefs.SetString("LoggedInUserID", loggedInUserId);
+                        PlayerPrefs.SetString("LoggedInUserID", userId);
                         PlayerPrefs.Save();
+                        UserSession.UserId = userId;
 
                         switchScene = true;
                         break;

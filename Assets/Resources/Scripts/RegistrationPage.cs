@@ -98,12 +98,6 @@ public class RegistrationPage : MonoBehaviour
             return;
         }
 
-        //string profileImage = ConvertImageToBase64(displayImage);
-        // if (string.IsNullOrEmpty(profileImage))
-        // {
-        //      Debug.LogError("No image selected.");
-        //     return;
-        //}
 
         string hashedPassword = HashPassword(password);
 
