@@ -17,10 +17,20 @@ public class AccessoriesController : MonoBehaviour
     private int userCoins; // Track the user's current coins
     private string userId; // Dynamically fetched user ID
 
+    [SerializeField] private GameObject confirmationPanel; 
+    public GameObject successPanel;
+    public GameObject failurePanel;
+
+    [SerializeField] private Text confirmationText; 
+    [SerializeField] private Text itemNameText; 
+    [SerializeField] private Text itemPriceText; 
+    [SerializeField] private Image itemImage; 
+    [SerializeField] private Button yesButton; 
+    [SerializeField] private Button noButton; 
+
     void Start()
     {
-
-        userId = UserSession.UserId; // Fetch the current user ID from the session
+        userId = UserSession.UserId; 
         if (string.IsNullOrEmpty(userId))
         {
             Debug.LogError("User ID is not set! Ensure the user is logged in or registered.");
@@ -107,16 +117,42 @@ public class AccessoriesController : MonoBehaviour
             }
         }
 
-        // Automatically set up the OnClick event for the button
         Button buyButton = newItem.transform.Find("BuyItem").GetComponent<Button>();
         if (buyButton != null)
         {
-            buyButton.onClick.RemoveAllListeners();  // Clear existing listeners
-
-            // Add a listener to the button's OnClick event, passing the item name automatically
-            buyButton.onClick.AddListener(() => BuyItem(name));
+            buyButton.onClick.RemoveAllListeners();
+            buyButton.onClick.AddListener(() => ShowConfirmationPanel(name, price, itemImage));
         }
 
+    }
+
+    void ShowConfirmationPanel(string itemName, string itemPrice, Sprite itemSprite)
+    {
+        // Activate the Confirmation Panel
+        confirmationPanel.SetActive(true);
+
+        // Update the UI elements in the Confirmation Panel
+        confirmationText.text = "Confirm Purchase?";
+        itemNameText.text = itemName;
+        itemPriceText.text = "$" + itemPrice;
+
+        if (itemSprite != null)
+        {
+            itemImage.sprite = itemSprite;
+        }
+        else
+        {
+            Debug.LogWarning("Item image is null. Using a placeholder.");
+            itemImage.sprite = Resources.Load<Sprite>("placeholder"); // Load placeholder image if available
+        }
+
+        // Set up Yes button to confirm purchase
+        yesButton.onClick.RemoveAllListeners(); // Clear any previous listeners
+        yesButton.onClick.AddListener(() => BuyItem(itemName));
+
+        // Set up No button to close the Confirmation Panel
+        noButton.onClick.RemoveAllListeners(); // Clear any previous listeners
+        noButton.onClick.AddListener(() => confirmationPanel.SetActive(false));
     }
 
     public void BuyItem(string itemName)
@@ -127,7 +163,7 @@ public class AccessoriesController : MonoBehaviour
         string userInventoryPath = $"users/{userId}/inventory"; // Correct path to the user's inventory
 
         // Fetch item details and user coins
-        dbReference.GetValueAsync().ContinueWith(task =>
+        dbReference.GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsCompleted && !task.IsFaulted)
             {
@@ -168,57 +204,19 @@ public class AccessoriesController : MonoBehaviour
                     int newCoinBalance = userCoins - itemPrice;
                     dbReference.Child(userCoinsPath).SetValueAsync(newCoinBalance);
 
-                    // Check if the inventory exists
-                    if (!snapshot.Child(userInventoryPath).Exists)
-                    {
-                        // If inventory doesn't exist, create a new inventory with the item as "Item 1: itemName"
-                        Dictionary<string, string> newInventory = new Dictionary<string, string> {
-                        { "Item 1", itemName }
-                        };
-                        dbReference.Child(userInventoryPath).SetValueAsync(newInventory).ContinueWith(createTask =>
-                        {
-                            if (createTask.IsCompleted)
-                            {
-                                Debug.Log($"Inventory created and item '{itemName}' added successfully!");
-                            }
-                            else
-                            {
-                                Debug.LogError("Failed to create inventory: " + createTask.Exception);
-                            }
-                        });
-                    }
-                    else
-                    {
-                        // If inventory exists, add the new item to the inventory with the next available index
-                        Dictionary<string, string> inventory = new Dictionary<string, string>();
+                    // Update inventory
+                    UpdateInventory(snapshot, userInventoryPath, itemName);
 
-                        // Fetch the current inventory items and add the new item
-                        int index = 1;
-                        foreach (var item in snapshot.Child(userInventoryPath).Children)
-                        {
-                            inventory.Add($"Item {index}", item.Value.ToString());
-                            index++;
-                        }
-
-                        // Add the new item with the next index
-                        inventory.Add($"Item {index}", itemName);
-
-                        // Update the inventory in Firebase
-                        dbReference.Child(userInventoryPath).SetValueAsync(inventory).ContinueWith(updateTask =>
-                        {
-                            if (updateTask.IsCompleted)
-                            {
-                                Debug.Log($"Item '{itemName}' purchased and added to inventory successfully!");
-                            }
-                            else
-                            {
-                                Debug.LogError("Failed to update inventory: " + updateTask.Exception);
-                            }
-                        });
-                    }
+                    // Show success panel
+                    confirmationPanel.SetActive(false);
+                    successPanel.SetActive(true);
+                    Debug.Log("Purchase successful!");
                 }
                 else
                 {
+                    // Show failure panel
+                    confirmationPanel.SetActive(false);
+                    failurePanel.SetActive(true);
                     Debug.Log("Insufficient Coins!");
                 }
             }
@@ -229,6 +227,75 @@ public class AccessoriesController : MonoBehaviour
         });
     }
 
+    private void UpdateInventory(DataSnapshot snapshot, string userInventoryPath, string itemName)
+    {
+        if (!snapshot.Child(userInventoryPath).Exists)
+        {
+            // If inventory doesn't exist, create a new inventory with the item
+            Dictionary<string, string> newInventory = new Dictionary<string, string> {
+            { "Item 1", itemName }
+        };
+            dbReference.Child(userInventoryPath).SetValueAsync(newInventory).ContinueWithOnMainThread(createTask =>
+            {
+                if (createTask.IsCompleted)
+                {
+                    Debug.Log($"Inventory created and item '{itemName}' added successfully!");
+                }
+                else
+                {
+                    Debug.LogError("Failed to create inventory: " + createTask.Exception);
+                }
+            });
+        }
+        else
+        {
+            // If inventory exists, add the new item
+            Dictionary<string, string> inventory = new Dictionary<string, string>();
+            int index = 1;
+
+            foreach (var item in snapshot.Child(userInventoryPath).Children)
+            {
+                inventory.Add($"Item {index}", item.Value.ToString());
+                index++;
+            }
+
+            inventory.Add($"Item {index}", itemName);
+
+            dbReference.Child(userInventoryPath).SetValueAsync(inventory).ContinueWithOnMainThread(updateTask =>
+            {
+                if (updateTask.IsCompleted)
+                {
+                    Debug.Log($"Item '{itemName}' purchased and added to inventory successfully!");
+                }
+                else
+                {
+                    Debug.LogError("Failed to update inventory: " + updateTask.Exception);
+                }
+            });
+        }
+    }
 
 
+    public void CloseConfirmationPanel() 
+    {
+        confirmationPanel.SetActive(false);
+    }
+
+    public void CloseSuccessPanel() 
+    {
+        successPanel.SetActive(false);
+    }
+
+    public void CloseFailurePanel() 
+    {
+        failurePanel.SetActive(false);
+    }
+
+    public void TestPanel()
+    {
+        failurePanel.SetActive(true);
+        Debug.Log("Failure panel should be visible now.");
+    }
 }
+
+
