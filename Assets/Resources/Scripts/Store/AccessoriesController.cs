@@ -12,15 +12,13 @@ public class AccessoriesController : MonoBehaviour
 
     public GameObject itemPrefab; // Assign the prefab in the Inspector
     public Transform contentParent; // Assign the Content object of the Scroll View
-
     private DatabaseReference dbReference;
-    private int userCoins; // Track the user's current coins
-    private string userId; // Dynamically fetched user ID
-
+    private int userCoins; 
+    private string userId; 
     [SerializeField] private GameObject confirmationPanel; 
     public GameObject successPanel;
     public GameObject failurePanel;
-
+    public Button closeSuccessButton;  
     [SerializeField] private Text confirmationText; 
     [SerializeField] private Text itemNameText; 
     [SerializeField] private Text itemPriceText; 
@@ -35,6 +33,16 @@ public class AccessoriesController : MonoBehaviour
         {
             Debug.LogError("User ID is not set! Ensure the user is logged in or registered.");
             return;
+        }
+
+        // Check if the button is assigned in the Inspector
+        if (closeSuccessButton != null)
+        {
+            closeSuccessButton.onClick.AddListener(OnCloseSuccessPanel);
+        }
+        else
+        {
+            Debug.LogError("CloseSuccessButton is not assigned in the Inspector.");
         }
 
         itemPrefab.SetActive(false);
@@ -55,24 +63,56 @@ public class AccessoriesController : MonoBehaviour
 
     void LoadItemsFromDatabase()
     {
-        dbReference.Child("items").GetValueAsync().ContinueWithOnMainThread(task =>
+        string userInventoryPath = $"users/{userId}/inventory"; 
+
+        // Fetch user inventory first
+        dbReference.GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsCompleted)
             {
                 DataSnapshot snapshot = task.Result;
-                foreach (DataSnapshot item in snapshot.Children)
-                {
-                    string itemName = item.Child("itemName").Value.ToString();
-                    string itemPrice = item.Child("itemPrice").Value.ToString();
 
-                    CreateUIItem(itemName, itemPrice);
+                // Get a list of owned items
+                HashSet<string> ownedItems = new HashSet<string>();
+                if (snapshot.Child(userInventoryPath).Exists)
+                {
+                    foreach (var item in snapshot.Child(userInventoryPath).Children)
+                    {
+                        ownedItems.Add(item.Value.ToString());
+                    }
                 }
+
+                // Now fetch all shop items
+                dbReference.Child("items").GetValueAsync().ContinueWithOnMainThread(itemTask =>
+                {
+                    if (itemTask.IsCompleted)
+                    {
+                        DataSnapshot itemsSnapshot = itemTask.Result;
+
+                        foreach (DataSnapshot item in itemsSnapshot.Children)
+                        {
+                            string itemName = item.Child("itemName").Value.ToString();
+                            string itemPrice = item.Child("itemPrice").Value.ToString();
+
+                            // Skip items that the user already owns
+                            if (!ownedItems.Contains(itemName))
+                            {
+                                CreateUIItem(itemName, itemPrice);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to fetch shop items from Firebase.");
+                    }
+                });
             }
             else
             {
-                Debug.LogError("Failed to fetch items from Firebase.");
+                Debug.LogError("Failed to fetch user inventory from Firebase.");
             }
         });
+
     }
 
     void CreateUIItem(string name, string price)
@@ -108,7 +148,6 @@ public class AccessoriesController : MonoBehaviour
         else
         {
             Debug.LogWarning($"Image for {name} not found. Using placeholder.");
-            // Optionally, set a placeholder image if the item image is not found
             Sprite placeholderImage = Resources.Load<Sprite>("placeholder"); // Assuming you have a placeholder image
             if (placeholderImage != null)
             {
@@ -128,10 +167,8 @@ public class AccessoriesController : MonoBehaviour
 
     void ShowConfirmationPanel(string itemName, string itemPrice, Sprite itemSprite)
     {
-        // Activate the Confirmation Panel
         confirmationPanel.SetActive(true);
 
-        // Update the UI elements in the Confirmation Panel
         confirmationText.text = "Confirm Purchase?";
         itemNameText.text = itemName;
         itemPriceText.text = "$" + itemPrice;
@@ -143,15 +180,15 @@ public class AccessoriesController : MonoBehaviour
         else
         {
             Debug.LogWarning("Item image is null. Using a placeholder.");
-            itemImage.sprite = Resources.Load<Sprite>("placeholder"); // Load placeholder image if available
+            itemImage.sprite = Resources.Load<Sprite>("placeholder"); 
         }
 
         // Set up Yes button to confirm purchase
-        yesButton.onClick.RemoveAllListeners(); // Clear any previous listeners
+        yesButton.onClick.RemoveAllListeners(); 
         yesButton.onClick.AddListener(() => BuyItem(itemName));
 
         // Set up No button to close the Confirmation Panel
-        noButton.onClick.RemoveAllListeners(); // Clear any previous listeners
+        noButton.onClick.RemoveAllListeners(); 
         noButton.onClick.AddListener(() => confirmationPanel.SetActive(false));
     }
 
@@ -159,8 +196,8 @@ public class AccessoriesController : MonoBehaviour
     {
         // Define paths in the Firebase database
         string itemsPath = "items";
-        string userCoinsPath = $"users/{userId}/userCoins"; // Correct path to the user's coin balance
-        string userInventoryPath = $"users/{userId}/inventory"; // Correct path to the user's inventory
+        string userCoinsPath = $"users/{userId}/userCoins"; 
+        string userInventoryPath = $"users/{userId}/inventory"; 
 
         // Fetch item details and user coins
         dbReference.GetValueAsync().ContinueWithOnMainThread(task =>
@@ -207,14 +244,12 @@ public class AccessoriesController : MonoBehaviour
                     // Update inventory
                     UpdateInventory(snapshot, userInventoryPath, itemName);
 
-                    // Show success panel
                     confirmationPanel.SetActive(false);
                     successPanel.SetActive(true);
                     Debug.Log("Purchase successful!");
                 }
                 else
                 {
-                    // Show failure panel
                     confirmationPanel.SetActive(false);
                     failurePanel.SetActive(true);
                     Debug.Log("Insufficient Coins!");
@@ -275,6 +310,35 @@ public class AccessoriesController : MonoBehaviour
         }
     }
 
+    void RemoveItemFromScrollView(string itemName)
+    {
+        foreach (Transform child in contentParent)
+        {
+            if (child.name == itemName)
+            {
+                Destroy(child.gameObject);
+                Debug.Log($"Removed item {itemName} from the ScrollView.");
+            }
+        }
+    }
+
+    void OnCloseSuccessPanel()
+    {
+        successPanel.SetActive(false);
+        RefreshInventory();
+    }
+
+    void RefreshInventory()
+    {
+        // Clear existing items in the Scroll View
+        foreach (Transform child in contentParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Fetch the updated inventory again
+        LoadItemsFromDatabase();
+    }
 
     public void CloseConfirmationPanel() 
     {
@@ -289,12 +353,6 @@ public class AccessoriesController : MonoBehaviour
     public void CloseFailurePanel() 
     {
         failurePanel.SetActive(false);
-    }
-
-    public void TestPanel()
-    {
-        failurePanel.SetActive(true);
-        Debug.Log("Failure panel should be visible now.");
     }
 }
 
