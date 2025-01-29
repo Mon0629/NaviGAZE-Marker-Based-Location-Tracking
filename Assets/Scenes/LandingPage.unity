@@ -119,6 +119,53 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &446616589
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 446616591}
+  - component: {fileID: 446616590}
+  m_Layer: 0
+  m_Name: Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &446616590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446616589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8db6d6408d77a5d429ac0441a3f373fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  studentButton: {fileID: 1457074108}
+  professorButton: {fileID: 1455762110}
+  guestButton: {fileID: 1190437379}
+--- !u!4 &446616591
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446616589}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 778.9546, y: 1158.597, z: 15.753742}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &528222726
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,11 +225,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 80
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_MinSize: 8
+    m_MaxSize: 80
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -555,11 +602,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 80
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_MinSize: 8
+    m_MaxSize: 80
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -680,7 +727,7 @@ GameObject:
   - component: {fileID: 1190437380}
   - component: {fileID: 1190437379}
   m_Layer: 5
-  m_Name: Button (Legacy)
+  m_Name: GuestButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -703,7 +750,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22.2032, y: 837}
+  m_AnchoredPosition: {x: 22.2032, y: 47}
   m_SizeDelta: {x: 665.1217, y: 240.93}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1190437379
@@ -937,11 +984,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 80
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_MinSize: 0
+    m_MaxSize: 80
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -970,7 +1017,7 @@ GameObject:
   - component: {fileID: 1455762111}
   - component: {fileID: 1455762110}
   m_Layer: 5
-  m_Name: Button (Legacy) (2)
+  m_Name: ProfessorButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -993,7 +1040,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22.2032, y: 192}
+  m_AnchoredPosition: {x: 22.2032, y: -598}
   m_SizeDelta: {x: 665.1217, y: 240.93}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1455762110
@@ -1091,7 +1138,7 @@ GameObject:
   - component: {fileID: 1457074109}
   - component: {fileID: 1457074108}
   m_Layer: 5
-  m_Name: Button (Legacy) (1)
+  m_Name: StudentButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1114,7 +1161,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22.2032, y: 520}
+  m_AnchoredPosition: {x: 22.2032, y: -270}
   m_SizeDelta: {x: 665.1217, y: 240.93}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1457074108
@@ -1207,3 +1254,4 @@ SceneRoots:
   - {fileID: 635806762}
   - {fileID: 905455489}
   - {fileID: 1281429389}
+  - {fileID: 446616591}

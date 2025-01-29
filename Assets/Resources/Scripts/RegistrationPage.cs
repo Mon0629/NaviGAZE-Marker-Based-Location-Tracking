@@ -82,7 +82,9 @@ public class RegistrationPage : MonoBehaviour
         string yearSection = yearSectionInput.text.Trim();
         string department = dropdownController.collegeDepartment.options[dropdownController.collegeDepartment.value].text;
         string program = dropdownController.collegeProgram.options[dropdownController.collegeProgram.value].text;
-       
+        string selectedRole = PlayerPrefs.GetString("SelectedRole", "");
+
+
         if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || 
             string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || 
             string.IsNullOrEmpty(confirmPassword) || string.IsNullOrEmpty(yearSection) || 
@@ -101,7 +103,7 @@ public class RegistrationPage : MonoBehaviour
 
         string hashedPassword = HashPassword(password);
 
-        userData = new UserData(firstName, lastName, email, hashedPassword, department, program, yearSection);
+        userData = new UserData(firstName, lastName, email, hashedPassword, department, program, yearSection, selectedRole);
 
         string json = JsonUtility.ToJson(userData);
 
@@ -146,16 +148,5 @@ public class RegistrationPage : MonoBehaviour
             return builder.ToString();
         }
     }
-    private string ConvertImageToBase64(Image image)
-{
-    if (image.sprite == null)
-    {
-        Debug.LogError("No image selected.");
-        return null;
-    }
-    Texture2D texture = image.sprite.texture;
-    byte[] imageBytes = texture.EncodeToPNG();
-    return System.Convert.ToBase64String(imageBytes);
-}
 
 }

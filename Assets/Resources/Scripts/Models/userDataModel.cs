@@ -12,10 +12,11 @@ namespace userDataModel.Models
         public string department;
         public string program;
         public string yearSection;
+        public string role;
         public int userCoins;
         public int exp;
 
-        public UserData(string firstName, string lastName, string email, string password, string department, string program, string yearSection)
+        public UserData(string firstName, string lastName, string email, string password, string department, string program, string yearSection, string role)
         {
             this.firstName = firstName;
             this.lastName = lastName;
@@ -24,9 +25,11 @@ namespace userDataModel.Models
             this.department = department;
             this.program = program;
             this.yearSection = yearSection;
+            this.role = role;
 
             this.userCoins = 50;
             this.exp = 0;
+
         }
     }
 }
