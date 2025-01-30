@@ -45,6 +45,8 @@ public class AddScheduleController : MonoBehaviour
                 Debug.LogError($"Could not resolve Firebase dependencies: {task.Result}");
             }
         });
+
+        subjectCode.onValueChanged.AddListener(OnClassCodeChanged);
     }
 
     void Update()
@@ -178,6 +180,11 @@ private void SaveToDatabase(ScheduleData schedule)
         {
             Destroy(child.gameObject);
         }
+    }
+
+    private void OnClassCodeChanged(string input)
+    {
+        subjectName.text = ClassCodeDictionary.GetSubjectName(input);
     }
 }
 
