@@ -21,7 +21,7 @@ public class ClassCodeDictionary : MonoBehaviour
         { "CS 119", "CS Thesis Writing 2" },
         { "CCS 115", "Current Trends In IT and Seminars" },
         { "CSE 105", "Parallel and Distributed Computing" },
-        { "CS 416", "Practicum 2" },
+        { "CS 416", "Practicum 2" }
     };
 
     public static string GetSubjectName(string classCode)

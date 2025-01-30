@@ -19,6 +19,7 @@ public class AddScheduleController : MonoBehaviour
     public Dropdown dayOfTheWeek; 
     public Dropdown startTime;
     public Dropdown endTime;
+    public Dropdown campus;
 
     public GameObject rowTemplate;     
     public Transform tableContainer;
@@ -96,7 +97,8 @@ public class AddScheduleController : MonoBehaviour
             room.text,
             dayOfTheWeek.options[dayOfTheWeek.value].text,
             startTime.options[startTime.value].text,
-            endTime.options[endTime.value].text
+            endTime.options[endTime.value].text,
+            campus.options[campus.value].text
         );
 
         scheduleList.Add(schedule); 
@@ -140,7 +142,8 @@ private void SaveToDatabase(ScheduleData schedule)
         { "room", schedule.room },
         { "dayOfTheWeek", schedule.dayOfTheWeek },
         { "startTime", schedule.startTime },
-        { "endTime", schedule.endTime}
+        { "endTime", schedule.endTime},
+        { "campus", schedule.campus}
     };
 
     // Save the schedule under the user's ID
@@ -167,6 +170,7 @@ private void SaveToDatabase(ScheduleData schedule)
         dayOfTheWeek.value = 0;
         startTime.value = 0;
         endTime.value = 0;
+        campus.value = 0;
     }
 
     public void SkipButtonClicked()
@@ -198,8 +202,9 @@ public class ScheduleData
     public string dayOfTheWeek;
     public string startTime;
     public string endTime;
+    public string campus;
 
-    public ScheduleData(string subjectCode, string subjectName, string room, string dayOfTheWeek, string startTime, string endTime)
+    public ScheduleData(string subjectCode, string subjectName, string room, string dayOfTheWeek, string startTime, string endTime, string campus)
     {
         this.subjectCode = subjectCode;
         this.subjectName = subjectName;
@@ -207,5 +212,6 @@ public class ScheduleData
         this.dayOfTheWeek = dayOfTheWeek;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.campus = campus;
     }
 }
